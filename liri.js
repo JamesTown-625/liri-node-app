@@ -6,6 +6,8 @@ var Twitter = require("twitter");
 var Spotify = require('node-spotify-api');
 // require request for the OMDB to work! =============
 var request = require('request');
+// require file system to use with random.txt file =================
+var fs = require('file-system');
 
 
 // user input variables below ==================
@@ -110,3 +112,31 @@ function movie() {
 });
 }
 // OMDB function above ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+// LIRI function to use text from a file instead of user input =====================
+
+function liri() {
+  fs.readFile('random.txt', 'utf8', function (err, data) {
+  if (err) throw err;
+  console.log("This is what the random.txt file command is: " + data);
+
+  var dataArray = data.split(",");
+  // console.log(dataArray[0]);
+  // console.log(dataArray[1]);
+    if (dataArray[0] === "spotify-this-song") {
+        argOne = dataArray[0];
+        argTwo = dataArray[1];
+        spotify();
+    } else if (dataArray[0] === "my-tweets") {
+        argOne = dataArray[0];
+        argTwo = dataArray[1];
+        tweets();
+    } else if (dataArray[0] === "movie-this") {
+        argOne = dataArray[0];
+        argTwo = dataArray[1];
+        movie();
+    } else {
+      console.log("LIRI does not understand that command, review text in random.txt.");
+    }
+  });
+}

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JamesTown-625/liri-node-app#readme",
   "dependencies": {
+    "file-system": "^2.2.2",
     "node-spotify-api": "^1.0.7",
     "twitter": "^1.7.1"
   }
