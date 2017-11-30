@@ -1,0 +1,112 @@
+// authenication keys for the twitter file to work ==================================
+var keys = require("./keys.js");
+// require twitter's premade javascript file to work on pulling tweets for me ========= 
+var Twitter = require("twitter");
+// require spotify to pull information from their API ============== 
+var Spotify = require('node-spotify-api');
+// require request for the OMDB to work! =============
+var request = require('request');
+
+
+// user input variables below ==================
+
+var argOne = process.argv[2];
+var argTwo = process.argv[3];
+var argThree = process.argv[4];
+var argFour = process.argv[5];
+
+switch (argOne) {
+  case "my-tweets":
+    tweets();
+    break;
+
+  case "spotify-this-song":
+    spotify();
+    break;
+
+  case "movie-this":
+    movie();
+    break;
+
+  case "do-what-it-says":
+    liri();
+    break;
+
+  default:
+    console.log("LIRI does not know that command"); 
+}
+// Twitter showing donald trump's last 20 tweets function ====================
+function tweets() {
+	var client = new Twitter(keys);
+ 
+var params = {screen_name: 'realdonaldtrump'};
+client.get('statuses/user_timeline', params, function(error, tweets, response) {
+  if (!error) {
+    for(var i = 0; i < tweets.length; i++){
+    	console.log("===========================")
+    	console.log(tweets[i].user.name)   
+    	console.log(tweets[i].text)    
+    }
+    console.log(tweets.length)
+
+  }
+});
+}
+// Twitter function above!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+// Spotify search engine Function==============================================
+function spotify() {
+var Spotify = require('node-spotify-api');
+var songName = argTwo;
+var spotify = new Spotify({
+  id: "cc09dc80bd2f4c7484a14ab1b35ca900",
+  secret: "c9ee3179d29f462db8fed24ddd59d9c5"
+});
+
+var getArtistNames = function(artist) {
+  return artist.name;
+}
+ 
+spotify.search({ type: 'track', query: songName, limit: 20}, function(err, data) {
+  if (err) {
+    console.log('Error occurred: ' + err);
+    return; 
+  }
+
+  var songs = data.tracks.items;
+  for (var i = 0; i < songs.length; i++) {
+    console.log(i);
+    console.log("Artist(s): " + songs[i].artists.map (
+      getArtistNames));
+    console.log("Song Name: " + songs[i].name);
+    console.log("Preview Song: " + songs[i].external_urls.spotify);
+    console.log("Album: " + songs[i].album.name);
+    console.log("========================================================")
+  } 
+});
+}
+// Spotify function above ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+// OMDB search engine Function ===================================================
+
+function movie() {
+  var movieName = argTwo;
+  request('http://www.omdbapi.com/?apikey=trilogy&t=' + movieName, function (error, response, body) {
+    if (error) {
+      console.log("An error has occurred: " + error);
+      console.log('statusCode:', response && response.statusCode);
+    }
+  // console.log('body:', body);
+  var jsonData = JSON.parse(body);
+  
+  console.log('Movie Title: ' + jsonData.Title);
+  console.log('Release Year: ' + jsonData.Year);
+  console.log('IMDB Rating: ' + jsonData.imdbRating);
+  console.log('Rotten Tomato Rating: ' + jsonData.Ratings[1].Value);
+  console.log('Country of Origin: ' + jsonData.Country);
+  console.log('Movie Language(s): ' + jsonData.Language);
+  console.log('Movie Plot: ' + jsonData.Plot);
+  console.log("Movie's Actors: " + jsonData.Actors);
+});
+}
+// OMDB function above ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
