@@ -14,8 +14,6 @@ var fs = require('file-system');
 
 var argOne = process.argv[2];
 var argTwo = process.argv[3];
-var argThree = process.argv[4];
-var argFour = process.argv[5];
 
 switch (argOne) {
   case "my-tweets":
@@ -39,14 +37,14 @@ switch (argOne) {
 }
 // Twitter showing donald trump's last 20 tweets function ====================
 function tweets() {
-	var client = new Twitter(keys);
- 
-var params = {screen_name: 'realdonaldtrump'};
-client.get('statuses/user_timeline', params, function(error, tweets, response) {
+	var client = new Twitter(keys.twitterKeys);
+  var search = argTwo;
+var params = {screen_name: search}; 
+client.get('statuses/user_timeline', params, function(error, tweets) {
   if (!error) {
-    for(var i = 0; i < tweets.length; i++){
+    for(let i = 0; i < tweets.length; i++){
     	console.log("===========================")
-    	console.log(tweets[i].user.name)   
+    	console.log(tweets[0].user.name)   
     	console.log(tweets[i].text)    
     }
     console.log(tweets.length)
@@ -58,12 +56,8 @@ client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
 // Spotify search engine Function==============================================
 function spotify() {
-var Spotify = require('node-spotify-api');
 var songName = argTwo;
-var spotify = new Spotify({
-  id: "cc09dc80bd2f4c7484a14ab1b35ca900",
-  secret: "c9ee3179d29f462db8fed24ddd59d9c5"
-});
+var spotify = new Spotify(keys.spotifyKeys);
 
 var getArtistNames = function(artist) {
   return artist.name;

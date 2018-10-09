@@ -1,2 +1,5 @@
-node_modules
+node_modules/
 .DS_Store
+keys.js
+package.json
+package-lock.json
